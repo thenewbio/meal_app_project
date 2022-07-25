@@ -1,54 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/views/category_view.dart';
+import 'package:meal_app/views/favorite_view.dart';
+import 'package:meal_app/widgets/app_drawer.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  final List<Meal> favoriteMeals;
+  const MyHomePage(
+    this.favoriteMeals, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late List<Map<String, dynamic>> _pages;
+  int _selectedPageIndex = 0;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    _pages = [
+      {
+        'page': const CategoryScreen(),
+        'title': 'Categories',
+      },
+      {
+        'page': FavoriteScreen(widget.favoriteMeals),
+        'title': 'Your Favorite',
+      },
+    ];
+
+    super.initState();
+  }
+
+  void _selectPage(int index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _selectedPageIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        centerTitle: true,
+        title: Text(_pages[_selectedPageIndex]['title']),
       ),
-      body: Center(
-          child: Text(widget
-              .title)), // This trailing comma makes auto-formatting nicer for build methods.
+      endDrawer: const AppDrawer(),
+      // drawer: Drawer(),
+      body: _pages[_selectedPageIndex]['page'],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _selectPage,
+        backgroundColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Theme.of(context).accentColor,
+        currentIndex: _selectedPageIndex,
+        // type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.category),
+            label: 'Categories',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.star),
+            label: 'Favorites',
+          ),
+        ],
+      ),
     );
   }
 }

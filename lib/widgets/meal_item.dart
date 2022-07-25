@@ -9,15 +9,17 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
-  const MealItem(
-      {Key? key,
-      required this.id,
-      required this.title,
-      required this.imageUrl,
-      required this.duration,
-      required this.complexity,
-      required this.affordability})
-      : super(key: key);
+  // final Function removeItem;
+  const MealItem({
+    Key? key,
+    required this.id,
+    required this.title,
+    required this.imageUrl,
+    required this.duration,
+    required this.complexity,
+    required this.affordability,
+    // required this.removeItem
+  }) : super(key: key);
 
   String get complexityText {
     switch (complexity) {
@@ -52,7 +54,13 @@ class MealItem extends StatelessWidget {
   }
 
   void selectMeal(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(MealDetailScreen.routName, arguments: id);
+    Navigator.of(ctx)
+        .pushNamed(MealDetailScreen.routName, arguments: id)
+        .then((result) {
+      if (result != null) {
+        // removeItem(result);
+      }
+    });
   }
 
   @override
@@ -70,7 +78,7 @@ class MealItem extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
                   child: Image.network(
@@ -84,7 +92,8 @@ class MealItem extends StatelessWidget {
                   bottom: 20,
                   right: 10,
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     width: 300,
                     color: Colors.black54,
                     child: Text(
@@ -107,8 +116,8 @@ class MealItem extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.schedule),
-                      SizedBox(
+                      const Icon(Icons.schedule),
+                      const SizedBox(
                         width: 6,
                       ),
                       Text('$duration'),
@@ -116,8 +125,8 @@ class MealItem extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.work),
-                      SizedBox(
+                      const Icon(Icons.work),
+                      const SizedBox(
                         width: 6,
                       ),
                       Text(complexityText),
@@ -125,8 +134,8 @@ class MealItem extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.money),
-                      SizedBox(
+                      const Icon(Icons.money),
+                      const SizedBox(
                         width: 6,
                       ),
                       Text(affordabilityText),
